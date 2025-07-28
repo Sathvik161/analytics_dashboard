@@ -8,24 +8,29 @@ import {
   TrendingUp, 
   Users,
   Target,
-  Globe
+  Globe,
+  Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: Home, current: true },
-  { name: 'Analytics', href: '/analytics', icon: BarChart3, current: false },
-  { name: 'Campaigns', href: '/campaigns', icon: Target, current: false },
-  { name: 'Audience', href: '/audience', icon: Users, current: false },
-  { name: 'Revenue', href: '/revenue', icon: DollarSign, current: false },
-  { name: 'Performance', href: '/performance', icon: TrendingUp, current: false },
-  { name: 'Reports', href: '/reports', icon: FileText, current: false },
-  { name: 'Calendar', href: '/calendar', icon: Calendar, current: false },
-  { name: 'Websites', href: '/websites', icon: Globe, current: false },
+  { name: 'Dashboard', href: '/', icon: Home },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Campaigns', href: '/campaigns', icon: Target },
+  { name: 'Audience', href: '/audience', icon: Users },
+  { name: 'Automation', href: '/automation', icon: Zap },
 ];
 
 export function Sidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isCurrentPath = (href: string) => {
+    return location.pathname === href;
+  };
+
   return (
     <div className="flex h-full w-64 flex-col bg-gradient-surface border-r border-border/50">
       {/* Navigation */}
@@ -35,21 +40,25 @@ export function Sidebar() {
             Navigation
           </h2>
           <div className="space-y-1">
-            {navigation.map((item) => (
-              <Button
-                key={item.name}
-                variant={item.current ? "secondary" : "ghost"}
-                className={cn(
-                  "w-full justify-start gap-3 h-10",
-                  item.current 
-                    ? "bg-primary/10 text-primary hover:bg-primary/20 shadow-sm" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                )}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.name}
-              </Button>
-            ))}
+            {navigation.map((item) => {
+              const isCurrent = isCurrentPath(item.href);
+              return (
+                <Button
+                  key={item.name}
+                  variant={isCurrent ? "secondary" : "ghost"}
+                  className={cn(
+                    "w-full justify-start gap-3 h-10",
+                    isCurrent 
+                      ? "bg-primary/10 text-primary hover:bg-primary/20 shadow-sm" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  )}
+                  onClick={() => navigate(item.href)}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.name}
+                </Button>
+              );
+            })}
           </div>
         </div>
 
@@ -60,6 +69,7 @@ export function Sidebar() {
           <Button
             variant="ghost"
             className="w-full justify-start gap-3 h-10 text-muted-foreground hover:text-foreground hover:bg-muted/50"
+            onClick={() => navigate('/settings')}
           >
             <Settings className="h-4 w-4" />
             Settings

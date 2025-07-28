@@ -1,11 +1,22 @@
+import { useState } from "react";
 import { Bell, Search, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { NotificationPanel } from "./NotificationPanel";
+import { useNavigate } from "react-router-dom";
 
 export function Header() {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const navigate = useNavigate();
+
   return (
+    <>
+      <NotificationPanel 
+        isOpen={showNotifications} 
+        onClose={() => setShowNotifications(false)} 
+      />
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center px-6">
         {/* Logo */}
@@ -33,7 +44,12 @@ export function Header() {
         {/* Actions */}
         <div className="flex items-center gap-4">
           {/* Notifications */}
-          <Button variant="ghost" size="sm" className="relative">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="relative"
+            onClick={() => setShowNotifications(true)}
+          >
             <Bell className="h-5 w-5" />
             <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs bg-destructive text-destructive-foreground">
               3
@@ -41,7 +57,11 @@ export function Header() {
           </Button>
 
           {/* Settings */}
-          <Button variant="ghost" size="sm">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={() => navigate('/settings')}
+          >
             <Settings className="h-5 w-5" />
           </Button>
 
@@ -59,5 +79,6 @@ export function Header() {
         </div>
       </div>
     </header>
+    </>
   );
 }
