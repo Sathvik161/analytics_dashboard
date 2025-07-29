@@ -8,7 +8,7 @@ A modern, responsive, and visually stunning **AI-powered analytics dashboard** d
 
 ## 🚀 Live Demo
 
-Coming Soon...
+https://analyticsdashboard161.netlify.app/
 
 ---
 
