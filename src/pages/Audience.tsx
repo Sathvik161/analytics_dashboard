@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Users, UserPlus, Target, TrendingUp } from "lucide-react";
+import { Users, UserPlus, Target, TrendingUp, Eye, Edit } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export default function Audience() {
-  const audienceSegments = [
+  const [audienceSegments, setAudienceSegments] = useState([
     {
       id: 1,
       name: "High-Value Customers",
@@ -35,7 +37,28 @@ export default function Audience() {
       growth: "+3%",
       description: "Active email subscribers with high engagement"
     }
-  ];
+  ]);
+
+  const handleCreateSegment = () => {
+    toast({
+      title: "Create Segment",
+      description: "Audience segment creation wizard will open here.",
+    });
+  };
+
+  const handleViewSegment = (segmentId: number) => {
+    toast({
+      title: "View Segment",
+      description: `Opening detailed view for segment ${segmentId}.`,
+    });
+  };
+
+  const handleEditSegment = (segmentId: number) => {
+    toast({
+      title: "Edit Segment",
+      description: `Opening edit form for segment ${segmentId}.`,
+    });
+  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -53,7 +76,7 @@ export default function Audience() {
                   Understand and segment your audience for better targeting
                 </p>
               </div>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={handleCreateSegment}>
                 <UserPlus className="h-4 w-4" />
                 Create Segment
               </Button>
@@ -131,6 +154,14 @@ export default function Audience() {
                           >
                             {segment.growth}
                           </Badge>
+                          <div className="flex gap-2">
+                            <Button variant="outline" size="sm" onClick={() => handleViewSegment(segment.id)}>
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => handleEditSegment(segment.id)}>
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ))}

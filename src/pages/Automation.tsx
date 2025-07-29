@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,9 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Zap, Plus, Play, Pause, Settings } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export default function Automation() {
-  const automations = [
+  const [automations, setAutomations] = useState([
     {
       id: 1,
       name: "Welcome Email Series",
@@ -44,7 +46,52 @@ export default function Automation() {
       completions: "0",
       conversionRate: "0%"
     }
-  ];
+  ]);
+
+  const handleCreateAutomation = () => {
+    toast({
+      title: "Create Automation",
+      description: "Automation workflow builder will open here.",
+    });
+  };
+
+  const handleToggleAutomation = (automationId: number) => {
+    setAutomations(prev => 
+      prev.map(automation => 
+        automation.id === automationId 
+          ? { ...automation, isEnabled: !automation.isEnabled, status: !automation.isEnabled ? "Active" : "Paused" }
+          : automation
+      )
+    );
+    toast({
+      title: "Automation Updated",
+      description: "Automation status has been changed.",
+    });
+  };
+
+  const handleConfigureAutomation = (automationId: number) => {
+    toast({
+      title: "Configure Automation",
+      description: `Opening configuration for automation ${automationId}.`,
+    });
+  };
+
+  const handlePlayPauseAutomation = (automationId: number) => {
+    const automation = automations.find(a => a.id === automationId);
+    const newStatus = automation?.status === "Active" ? "Paused" : "Active";
+    
+    setAutomations(prev => 
+      prev.map(automation => 
+        automation.id === automationId 
+          ? { ...automation, status: newStatus, isEnabled: newStatus === "Active" }
+          : automation
+      )
+    );
+    toast({
+      title: `Automation ${newStatus}`,
+      description: `Automation has been ${newStatus.toLowerCase()}.`,
+    });
+  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -62,7 +109,7 @@ export default function Automation() {
                   Set up and manage automated marketing workflows
                 </p>
               </div>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={handleCreateAutomation}>
                 <Plus className="h-4 w-4" />
                 Create Automation
               </Button>
@@ -116,7 +163,10 @@ export default function Automation() {
                     {automations.map((automation) => (
                       <div key={automation.id} className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex items-center gap-4">
-                          <Switch checked={automation.isEnabled} />
+                          <Switch 
+                            checked={automation.isEnabled} 
+                            onCheckedChange={() => handleToggleAutomation(automation.id)}
+                          />
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <h3 className="font-semibold">{automation.name}</h3>
@@ -146,11 +196,11 @@ export default function Automation() {
                             <p className="text-sm text-muted-foreground">conversion</p>
                           </div>
                           <div className="flex gap-2">
-                            <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" onClick={() => handleConfigureAutomation(automation.id)}>
                               <Settings className="h-4 w-4" />
                             </Button>
-                            <Button variant="outline" size="sm">
-                              {automation.isEnabled ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                            <Button variant="outline" size="sm" onClick={() => handlePlayPauseAutomation(automation.id)}>
+                              {automation.status === "Active" ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                             </Button>
                           </div>
                         </div>

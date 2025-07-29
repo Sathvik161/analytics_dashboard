@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Target, Eye, Edit3 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export default function Campaigns() {
-  const campaigns = [
+  const [campaigns, setCampaigns] = useState([
     {
       id: 1,
       name: "Summer Sale 2024",
@@ -37,7 +39,28 @@ export default function Campaigns() {
       clicks: "0",
       conversions: "0"
     }
-  ];
+  ]);
+
+  const handleCreateCampaign = () => {
+    toast({
+      title: "Create Campaign",
+      description: "Campaign creation wizard will open here.",
+    });
+  };
+
+  const handleViewCampaign = (campaignId: number) => {
+    toast({
+      title: "View Campaign",
+      description: `Opening detailed view for campaign ${campaignId}.`,
+    });
+  };
+
+  const handleEditCampaign = (campaignId: number) => {
+    toast({
+      title: "Edit Campaign",
+      description: `Opening edit form for campaign ${campaignId}.`,
+    });
+  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -55,7 +78,7 @@ export default function Campaigns() {
                   Manage and monitor your marketing campaigns
                 </p>
               </div>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={handleCreateCampaign}>
                 <Plus className="h-4 w-4" />
                 Create Campaign
               </Button>
@@ -84,10 +107,10 @@ export default function Campaigns() {
                         </CardDescription>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleViewCampaign(campaign.id)}>
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => handleEditCampaign(campaign.id)}>
                           <Edit3 className="h-4 w-4" />
                         </Button>
                       </div>
